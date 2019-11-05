@@ -1,0 +1,23 @@
+# Git Ignores
+
+# Django Files and Data
+/data
+/media
+/static
+/secrets.json
+
+# OS Related
+.DS_Store
+
+# Python Files
+__pycache__/
+*.py[cod]
+
+# Vagrant Settings
+.vagrant
+*.log
+
+# Virtual Environment
+/venv
+
+# 2019.09.02-DEA
