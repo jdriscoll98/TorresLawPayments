@@ -18,7 +18,11 @@
 </style>
 <!-- end-recaptcha -->
 
-<p class="lead">Login form</p>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6 offset-md-3 login-form">
+
+<h1 class="lead">Login form</h1>
 
 {% if form.errors %}
 <p class="lead">Your username and password didn't match. Please try again.</p>
@@ -37,5 +41,8 @@
 	<input type="hidden" name="next" value="{{ next }}" />
 	<button class="btn btn-primary g-recaptcha" data-sitekey="{{ recaptcha_site_key }}" data-callback='onSubmit'>Login</button>
 </form>
+		</div>
+		</div>
+		</div>
 
 {% endblock contents %}

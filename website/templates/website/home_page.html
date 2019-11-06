@@ -4,10 +4,59 @@
 
 {% block contents %}
 
-<p class="lead">This is the home page.</p>
-
-<p class="lead">Click the button below to access the dashboard page.</p>
-
-<a class="btn btn-primary" href="{% url 'website:dashboard' %}" role="button">Dashboard</a>
-
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 offset-md-1">
+            <div class="new-client-card">
+                    <form method="POST" class="form">
+                    {% csrf_token %}
+                <table class="table">
+                    <thead class="table-head">
+                        <tr>
+                            <td colspan="2"><h3> Add a New Client </h3></td>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                    {{ form.as_table }}
+                    </tbody>
+                </table>
+                    <button type="submit" class="btn btn-primary">Add New Client</button>
+                    </form>
+            </div>
+        </div>
+        <div class="col-md-4 offset-md-1">
+            <div class="current-clients-card">
+                <table class="table">
+                    <thead class="table-head">
+                        <tr>
+                            <td colspan="3">
+                            <h3>Outstanding Clients</h3>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Payment amount
+                        </th>
+                        <th>
+                            Next Due Date
+                        </th>
+                    </tr>
+                    {% for client in clients %}
+                    <tr>
+                        <td>{{ client.name }}</td>
+                        <td>{{ client.payment_amount }}</td>
+                        <td>{{ client.next_payment_date }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            </div>
+            </div>
 {% endblock contents %}

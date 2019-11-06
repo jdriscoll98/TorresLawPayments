@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS += [
     'core',
     'website',
+    'phonenumber_field',
+
 ]
 
 # Databases
