@@ -4,6 +4,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import SuspiciousOperation
 from django.shortcuts import render, redirect
 
+from twilio.rest import TwilioRestClient
+from dango_tilio.utils import discover_twilio_credentials
+
 from .utils import recaptcha_validation
 
 # Application Views

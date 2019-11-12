@@ -29,7 +29,7 @@
                 <table class="table">
                     <thead class="table-head">
                         <tr>
-                            <td colspan="3">
+                            <td colspan="5">
                             <h3>Outstanding Clients</h3>
                             </td>
                         </tr>
@@ -45,18 +45,93 @@
                         <th>
                             Next Due Date
                         </th>
+                        <th>
+                            Total Amount Due
+                        </th>
+                        <th>
+                            Make a Payment
+                        </th>
                     </tr>
                     {% for client in clients %}
                     <tr>
                         <td>{{ client.name }}</td>
                         <td>{{ client.payment_amount }}</td>
                         <td>{{ client.next_payment_date }}</td>
+                        <td>{{ client.total_amount_due }}</td>
+                        <td><i class="fa fa-check" style="background-color: green; color: white; padding: 5px;" id='{{ client.pk }}' value="{{ client.payment_amount }}"></i></i></td>
                     </tr>
                     {% endfor %}
                     </tbody>
+                    <tfoot>
+                        <tr style="background-color: #00183e; color:white;" class="text-right">
+                            <td colspan="5" style="font-weight: bold">
+                                Total: {{ total }}
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
             </div>
             </div>
+            <div class="modal fade" id="modalLoginForm" value="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h3>Please fill out the payment form</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form class="comments" name="comments">
+                            <input type="hidden" id="pk" name="pk">
+                            {% csrf_token %}
+                            <div class="modal-body mx-3">
+                                <div class="md-form mb-5">
+                                    <label>Payment Amount</label>
+                                    <input type="text" id="amount" name="amount"></input>
+                                </div>
+ 
+            
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button class="btn btn-default modal-submit">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             </div>
 {% endblock contents %}
+
+
+{% block js %}
+
+<script>
+    $('.fa-check').on('click', function() {
+        let pk = $(this).attr('id')
+        $('input#pk').val(pk);
+        $('#modalLoginForm').modal('toggle');
+
+    })
+    $('.modal-submit').on("click", function () {
+            let amount = $('input#amount').val();
+            let pk = $('input#pk').val();
+            setup_ajax();
+            $.ajax({
+                url: "{% url 'website:make_payment' %}",
+                type: "POST",
+                data: {
+                    'amount': amount,
+                    'pk': pk,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    location.reload();
+                },
+            });
+        });
+
+</script>
+
+{% endblock js %}

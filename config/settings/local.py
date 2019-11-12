@@ -33,8 +33,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS += [
     'core',
     'website',
-    'phonenumber_field',
-
+    'django_twilio',
 ]
 
 # Databases
@@ -54,7 +53,7 @@ STATIC_URL = '/static/'
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Login Settings
 
