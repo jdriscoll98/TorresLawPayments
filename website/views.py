@@ -1,17 +1,22 @@
 import datetime
+import requests
+import schedule
+import time
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic import View
+from django.urls import reverse
 
-from twilio.twiml.messaging_response import messaging_response
-from django_twilio.decorators import twilio_view
 
 from django.http import JsonResponse, HttpResponse
 
 from .models import Client
+
+from sendsms import api
+from twilio.rest import Client as TwilioClient
 
 # Application Views
 
@@ -64,34 +69,59 @@ class MakePayment(LoginRequiredMixin, View):
 class SendUpcomingPayment(View):
     def get(self, *args, **kwargs):
         clients = Client.objects.all()
-        email_list = []
+        client_list = []
         for client in clients:
             if (client.next_payment_date - datetime.date.today()).days == 2:
-                email_list.append(client.email)
-        
-        send_mail(
-            'Upcoming Payment', 
-            'You have an upcoming payment for Torres Law Firm', 
-            'AutoReminder@TorresLawFl.com',
-            email_list,
-            fail_silently=False,
-        )
-        twiml = '<Response><Message>Hello from your Django app!</Message></Response>'
-        return HttpResponse(twiml, content_type='text/xml')
+               client_list.append(client)
+        for client in client_list:
+            send_mail(
+                'Upcoming Payment', 
+                'You have an upcoming payment for Torres Law Firm', 
+                'AutoReminder@TorresLawFl.com',
+                [client.email],
+                fail_silently=False,
+            )
+            api.send_sms(body='TEST MESSAGE',
+                         from_phone='+12055836393', to=[client.phone_number])
+        return HttpResponse()
 
 class SendLatePayment(View):
     def get(self, *args, **kwargs):
         clients = Client.objects.all()
-        email_list = []
+        client_list = []
         for client in clients:
             if (client.next_payment_date - datetime.date.today()).days <= -2:
-                email_list.append(client.email)
-        send_mail(
-            'Late Payment',
-            'This is a reminder that you missed a payment to Torres Law Firm \n' + 
-            'A Fee of $25 or 10 percent of your remaining balance will be added',
-            'AutoReminder@TorresLawFl.com',
-            email_list,
-            fail_silently=False
-        )
+                client_list.append(client)
+        for client in client_list:
+            send_mail(
+                'Late Payment',
+                'This is a reminder that you missed a payment to Torres Law Firm \n' + 
+                'A Fee of $25 or 10 percent of your remaining balance will be added',
+                'AutoReminder@TorresLawFl.com',
+                [client.email],
+                fail_silently=False
+            )
+            api.send_sms(body='This is a reminder that you missed a payment to Torres Law Firm \n' +
+                         'A Fee of $25 or 10 percent of your remaining balance will be added',
+                         from_phone='+12055836393', to=[client.phone_number])
         return HttpResponse()
+
+
+def job():
+    # requests.get(reverse('website:send_reminders'))
+    # requests.get(reverse('website:send_late'))
+    print('sending reminders')
+
+schedule.every(.1).minutes.do(job).tag('reminders')
+
+
+    
+
+def start_reminders(request):
+    while True:
+        schedule.run_pending()
+    return JsonResponse({})
+
+def stop_reminders(request):
+    schedule.clear('reminders')
+    return JsonResponse({})

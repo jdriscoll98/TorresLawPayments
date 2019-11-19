@@ -33,7 +33,6 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS += [
     'core',
     'website',
-    'django_twilio',
 ]
 
 # Databases
@@ -51,9 +50,17 @@ STATIC_URL = '/static/'
 
 # Email Backend
 
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST_USER = 'jackdriscoll777@gmail.com'
+EMAIL_HOST_PASSWORD = 'ckeevzvklypkvuhz'
+EMAIL_USE_TLS = True
+# SMS Backend
+
+SENDSMS_BACKEND = 'website.backends.twilio.SmsBackend'
+SENDSMS_TWILIO_ACCOUNT_SID = 'ACa37268f2b9a9abe55239044931339725'
+SENDSMS_TWILIO_AUTH_TOKEN = '71e98b3ec30f797dd303b712efcd06a4'
 
 # Login Settings
 

@@ -72,7 +72,7 @@
                 </table>
             </div>
             </div>
-            </div>
+            
             <div class="modal fade" id="modalLoginForm" value="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -101,6 +101,14 @@
                     </div>
                 </div>
             </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="btn btn-success" id="start" href="{% url 'website:start_reminders' %}">Start Reminders</a>
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn-danger" id="stop" href="{% url 'website:stop_reminders' %}" >Stop Reminders</a>
+                </div>
             </div>
 {% endblock contents %}
 
@@ -131,6 +139,26 @@
                 },
             });
         });
+     $('#start').on("click", function () {
+            setup_ajax();
+            $.ajax({
+                url: "{% url 'website:start_reminders' %}",
+                type: "GET",
+                success: function () {
+                    location.reload();
+                },
+            });
+        });
+    $('#stop').on("click", function () {
+            setup_ajax();
+            $.ajax({
+                url: "{% url 'website:stop_reminders' %}",
+                type: "GET",
+                success: function (data) {
+                    location.reload();
+                },
+            });
+        }); 
 
 </script>
 

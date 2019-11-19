@@ -1,3 +1,5 @@
 Django==1.11.24
 requests==2.22.0
-django_twilio==0.11.0
+django-sendsms==0.4
+twilio==6.33.1
+schedule-0.6.0
