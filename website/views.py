@@ -66,58 +66,86 @@ class MakePayment(LoginRequiredMixin, View):
                 print(e)
             return JsonResponse(data)
 
-class SendUpcomingPayment(View):
-    def get(self, *args, **kwargs):
-        clients = Client.objects.all()
-        client_list = []
-        for client in clients:
-            if (client.next_payment_date - datetime.date.today()).days == 2:
-               client_list.append(client)
-        for client in client_list:
-            send_mail(
-                'Upcoming Payment', 
-                'You have an upcoming payment for Torres Law Firm', 
-                'AutoReminder@TorresLawFl.com',
-                [client.email],
-                fail_silently=False,
-            )
-            api.send_sms(body='TEST MESSAGE',
-                         from_phone='+12055836393', to=[client.phone_number])
-        return HttpResponse()
+# class SendUpcomingPayment(View):
+#     def get(self, *args, **kwargs):
+#     clients = Client.objects.all()
+#     client_list = []
+#     for client in clients:
+#         if (client.next_payment_date - datetime.date.today()).days == 2:
+#             client_list.append(client)
+#     for client in client_list:
+#         send_mail(
+#             'Upcoming Payment', 
+#             'You have an upcoming payment for Torres Law Firm', 
+#             'AutoReminder@TorresLawFl.com',
+#             [client.email],
+#             fail_silently=False,
+#         )
+#         api.send_sms(body='TEST MESSAGE',
+#                         from_phone='+12055836393', to=[client.phone_number])
+#     return HttpResponse()
 
-class SendLatePayment(View):
-    def get(self, *args, **kwargs):
-        clients = Client.objects.all()
-        client_list = []
-        for client in clients:
-            if (client.next_payment_date - datetime.date.today()).days <= -2:
-                client_list.append(client)
-        for client in client_list:
-            send_mail(
-                'Late Payment',
-                'This is a reminder that you missed a payment to Torres Law Firm \n' + 
-                'A Fee of $25 or 10 percent of your remaining balance will be added',
-                'AutoReminder@TorresLawFl.com',
-                [client.email],
-                fail_silently=False
-            )
-            api.send_sms(body='This is a reminder that you missed a payment to Torres Law Firm \n' +
-                         'A Fee of $25 or 10 percent of your remaining balance will be added',
-                         from_phone='+12055836393', to=[client.phone_number])
-        return HttpResponse()
+# class SendLatePayment(View):
+#     def get(self, *args, **kwargs):
+#         clients = Client.objects.all()
+#         client_list = []
+#         for client in clients:
+#             if (client.next_payment_date - datetime.date.today()).days <= -2:
+#                 client_list.append(client)
+#         for client in client_list:
+#             send_mail(
+#                 'Late Payment',
+#                 'This is a reminder that you missed a payment to Torres Law Firm \n' + 
+#                 'A Fee of $25 or 10 percent of your remaining balance will be added',
+#                 'AutoReminder@TorresLawFl.com',
+#                 [client.email],
+#                 fail_silently=False
+#             )
+#             api.send_sms(body='This is a reminder that you missed a payment to Torres Law Firm \n' +
+#                          'A Fee of $25 or 10 percent of your remaining balance will be added',
+#                          from_phone='+12055836393', to=[client.phone_number])
+#         return HttpResponse()
 
 
 def job():
-    # requests.get(reverse('website:send_reminders'))
-    # requests.get(reverse('website:send_late'))
-    print('sending reminders')
+    clients = Client.objects.all()
+    client_list = []
+    for client in clients:
+        if (client.next_payment_date - datetime.date.today()).days <= -2:
+            client_list.append(client)
+    for client in client_list:
+        send_mail(
+            'Late Payment',
+            'This is a reminder that you missed a payment to Torres Law Firm \n' +
+            'A Fee of $25 or 10 percent of your remaining balance will be added',
+            'AutoReminder@TorresLawFl.com',
+            [client.email],
+            fail_silently=False
+        )
+        api.send_sms(body='This is a reminder that you missed a payment to Torres Law Firm \n' +
+                        'A Fee of $25 or 10 percent of your remaining balance will be added',
+                        from_phone='+12055836393', to=[client.phone_number])
+    for client in clients:
+        if (client.next_payment_date - datetime.date.today()).days == 2:
+            client_list.append(client)
+    for client in client_list:
+        send_mail(
+            'Upcoming Payment',
+            'You have an upcoming payment for Torres Law Firm',
+            'AutoReminder@TorresLawFl.com',
+            [client.email],
+            fail_silently=False,
+        )
+        api.send_sms(body='TEST MESSAGE',
+                     from_phone='+12055836393', to=[client.phone_number])
+    print('sent reminders')
 
-schedule.every(.1).minutes.do(job).tag('reminders')
 
 
     
 
 def start_reminders(request):
+    schedule.every(.1).minutes.do(job).tag('reminders')
     while True:
         schedule.run_pending()
     return JsonResponse({})
