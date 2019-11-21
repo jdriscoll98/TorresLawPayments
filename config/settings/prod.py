@@ -54,11 +54,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Email Backend
 
-EMAIL_HOST = "smtp.ufl.edu"
-EMAIL_PORT = 25
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST_USER = 'jackdriscoll777@gmail.com'
+EMAIL_HOST_PASSWORD = 'ckeevzvklypkvuhz'
 EMAIL_USE_TLS = True
+
+# SMS Backend
+
+SENDSMS_BACKEND = 'website.backends.twilio.SmsBackend'
+SENDSMS_TWILIO_ACCOUNT_SID = 'ACa37268f2b9a9abe55239044931339725'
+SENDSMS_TWILIO_AUTH_TOKEN = get_secret('TWILIO_AUTH_TOKEN')
 
 # Login Settings
 
@@ -72,6 +80,5 @@ RECAPTCHA_SITE_KEY = get_secret('RECAPTCHA_SITE_KEY')
 
 # Proxy Settings
 
-CSRF_COOKIE_DOMAIN = ".cise.ufl.edu"
 
 # 2019.09.02-DEA
