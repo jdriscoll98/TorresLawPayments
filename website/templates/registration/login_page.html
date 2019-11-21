@@ -4,6 +4,8 @@
 
 {% block contents %}
 
+{% load static %}
+
 <!-- being-recaptcha -->
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
@@ -20,9 +22,13 @@
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-md-6 offset-md-3 login-form">
+		<div class="col-md-3 offset-md-1">
+			<div class="img-container">
+				<img src="{% static 'website/images/torres-law-firm-logo.png' %}"/>
+			</div>
+		</div>
+		<div class="col-md-3 offset-md-4 login-form">
 
-<h1 class="lead">Login form</h1>
 
 {% if form.errors %}
 <p class="lead">Your username and password didn't match. Please try again.</p>
