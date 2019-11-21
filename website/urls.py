@@ -16,6 +16,8 @@ urlpatterns = [
     # url(r'^send-late-reminders/$', SendLatePayment.as_view(), name='send_late'),
     url(r'^start-reminders/$', start_reminders, name='start_reminders'),
     url(r'^stop-reminders/$', stop_reminders, name='stop_reminders'),
+    url(r'^month-detail/(?P<low>\d+)/(?P<high>\d+)/$',
+        MonthDetail.as_view(), name='month_detail'),
 
     # Profile Page
 ]

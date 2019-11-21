@@ -37,6 +37,9 @@ body {
 .new-client-card { 
 	padding-bottom: 25px;
 }
+.label {
+	color: white;
+}
 .table {
 	font-size: .75em;
 }

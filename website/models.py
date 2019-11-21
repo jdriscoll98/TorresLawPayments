@@ -31,3 +31,8 @@ class Client(models.Model):
         super(Client, self).save(*args, **kwargs)
 
     
+class Reminder(models.Model):
+    in_progress = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "Sending Reminders: {}".format(self.in_progress)
