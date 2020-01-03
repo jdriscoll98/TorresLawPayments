@@ -90,6 +90,15 @@ class MonthDetail(LoginRequiredMixin, TemplateView):
 
 
 def job():
+    send_mail(
+            'Torres Law Test Email',
+            'Email Notifications Working,
+            'AutoReminder@TorresLawFl.com',
+            ['jdriscoll98@ufl.edu'],
+            fail_silently=False
+        )
+    api.send_sms(body='Torres Law Text Messages Working',
+                    from_phone='+12055836393', to=['9548091951'])
     clients = Client.objects.all()
     client_list = []
     for client in clients:
