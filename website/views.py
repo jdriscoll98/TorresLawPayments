@@ -128,8 +128,7 @@ def job():
     
 
 def start_reminders(request):
-    # schedule.every(2).days.at('09:00').do(job).tag('reminders')
-    schedule.every(10).seconds.do(job).tag('reminders')
+    schedule.every(2).days.at('09:00').do(job).tag('reminders')
     reminder = Reminder.objects.get(pk=1)
     reminder.in_progress = True
     reminder.save()
