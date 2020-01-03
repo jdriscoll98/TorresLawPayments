@@ -56,7 +56,7 @@ class MakePayment(LoginRequiredMixin, View):
             }
             try:
                 client = Client.objects.get(pk=self.request.POST.get('pk'))
-                amount = self.request.POST.get('amount')
+                amount = float(self.request.POST.get('amount'))
                 client.total_amount_due -= amount
                 if client.total_amount_due <= 0:
                     client.delete()
