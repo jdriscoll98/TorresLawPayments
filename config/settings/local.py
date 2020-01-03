@@ -51,6 +51,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Login Settings
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST_USER = 'AutoReminderTorresLawFL@gmail.com'
+EMAIL_HOST_PASSWORD = 'tefnprfiddqbbwrr'
+EMAIL_USE_TLS = True
+
+# SMS Backend
+
+SENDSMS_BACKEND = 'website.backends.twilio.SmsBackend'
+SENDSMS_TWILIO_ACCOUNT_SID = 'ACa37268f2b9a9abe55239044931339725'
+SENDSMS_TWILIO_AUTH_TOKEN = get_secret('TWILIO_AUTH_TOKEN')
+
 LOGIN_URL = 'core:login'
 DEFAULT_PAGE = 'website:home_page'
 

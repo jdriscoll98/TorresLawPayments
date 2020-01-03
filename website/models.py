@@ -19,15 +19,16 @@ class Client(models.Model):
         return reverse("website:home_page")
 
     def save(self, *args, **kwargs):
-        if self.pk is None:
-            today = datetime.date.today()
-            if today.month == 12:
-                year = today.year + 1
-                month = 1
-            else:
-                year = today.year
-                month = today.month + 1
-            self.next_payment_date = datetime.date(year, month, 15)
+        if not self.next_payment_date:
+            if self.pk is None:
+                today = datetime.date.today()
+                if today.month == 12:
+                    year = today.year + 1
+                    month = 1
+                else:
+                    year = today.year
+                    month = today.month + 1
+                self.next_payment_date = datetime.date(year, month, 15)
         super(Client, self).save(*args, **kwargs)
 
     

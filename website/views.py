@@ -28,7 +28,7 @@ class HomePageView(LoginRequiredMixin, CreateView):
     template_name = 'website/home_page.html'
     model =  Client
     fields = (
-        'name', 'email', 'phone_number', 'total_amount_due', 'payment_amount'
+        'name', 'email', 'phone_number', 'total_amount_due', 'payment_amount', 'next_payment_date'
     )
     
     def get_context_data(self, **kwargs):
@@ -106,19 +106,21 @@ def job():
         api.send_sms(body='This is a reminder that you missed a payment to Torres Law Firm \n' +
                         'A Fee of $25 or 10 percent of your remaining balance will be added',
                         from_phone='+12055836393', to=[client.phone_number])
+    client_list = []
     for client in clients:
         if (client.next_payment_date - datetime.date.today()).days == 2:
             client_list.append(client)
     for client in client_list:
         send_mail(
             'Upcoming Payment',
-            'You have an upcoming payment for Torres Law Firm',
+            'You have an upcoming payment for Torres Law Firm \n A Fee of $25 or 10 percent of your remaining balance will be added if your payment is late',
             'AutoReminder@TorresLawFl.com',
             [client.email],
             fail_silently=False,
         )
-        api.send_sms(body='TEST MESSAGE',
-                     from_phone='+12055836393', to=[client.phone_number])
+        api.send_sms(body='This is a reminder that you have an upcoming payment for Torres Law Firm \n' +
+                        'A Fee of $25 or 10 percent of your remaining balance will be added if your payment is late',
+                        from_phone='+12055836393', to=[client.phone_number])
     print('sent reminders')
 
 
@@ -126,7 +128,8 @@ def job():
     
 
 def start_reminders(request):
-    schedule.every(2).days.at('9:00').do(job).tag('reminders')
+    # schedule.every(2).days.at('09:00').do(job).tag('reminders')
+    schedule.every(10).seconds.do(job).tag('reminders')
     reminder = Reminder.objects.get(pk=1)
     reminder.in_progress = True
     reminder.save()
