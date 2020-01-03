@@ -2,6 +2,7 @@ import datetime
 import requests
 import schedule
 import time
+from decimal import * 
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
@@ -56,7 +57,7 @@ class MakePayment(LoginRequiredMixin, View):
             }
             try:
                 client = Client.objects.get(pk=self.request.POST.get('pk'))
-                amount = float(self.request.POST.get('amount'))
+                amount = Decimal(self.request.POST.get('amount'))
                 client.total_amount_due -= amount
                 if client.total_amount_due <= 0:
                     client.delete()
