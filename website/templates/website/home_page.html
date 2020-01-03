@@ -54,7 +54,7 @@
                     </tr>
                     {% for client in clients %}
                     <tr>
-                        <td>{{ client.name }}</td>
+                        <td>{{ client.name }}<i class="fa fa-edit" style="color: orange; font-size: 20px; padding-left:10px;" href="{% url 'website:edit_client' client.pk %}" ></i></td>
                         <td>{{ client.payment_amount }}</td>
                         <td>{{ client.next_payment_date }}</td>
                         <td>{{ client.total_amount_due }}</td>
@@ -118,6 +118,10 @@
 {% block js %}
 
 <script>
+    $('.fa-edit').on('click', function() { 
+        window.location.href = $(this).attr('href');
+        })
+
     $('.fa-check').on('click', function() {
         let pk = $(this).attr('id')
         $('input#pk').val(pk);

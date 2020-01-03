@@ -6,7 +6,7 @@ import time
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic import View
 from django.urls import reverse
@@ -42,6 +42,11 @@ class HomePageView(LoginRequiredMixin, CreateView):
         context['3_total'] = get_total(next_3_clients)
         context['sending'] = Reminder.objects.get(pk=1).in_progress
         return context
+    
+class UpdateClient(LoginRequiredMixin, UpdateView):
+    template_name = 'website/edit_client.html'
+    model = Client
+    fields = '__all__'
         
 class MakePayment(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):

@@ -1,0 +1,31 @@
+{% extends 'website/base.html' %}
+
+{% block title %}{{ block.super }} | Home Page {% endblock title %}
+
+{% block contents %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="current-clients-card">
+                        <form method="POST">
+                <table class="table">
+                    <thead class="table-head">
+                        <tr>
+                            <td colspan="5">
+                                <h3>Update {{ client.name }}</h3>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ form.as_table }}
+                    </tbody>
+                </table>
+                        <button  class='btn btn-success' type="submit">Update Client</button>
+                    </form>
+            </div>
+        </div>
+
+    
+    {% endblock contents %}
+
