@@ -149,6 +149,9 @@
             });
         });
      $('#start').on("click", function () {
+            $(this).removeClass('btn-success').addClass('btn-danger');
+            $(this).html('Stop Reminders');
+            $(this).attr('id', 'stop');
             setup_ajax();
             $.ajax({
                 url: "{% url 'website:start_reminders' %}",

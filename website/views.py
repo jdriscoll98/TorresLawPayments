@@ -92,7 +92,7 @@ class MonthDetail(LoginRequiredMixin, TemplateView):
 def job():
     send_mail(
             'Torres Law Test Email',
-            'Email Notifications Working,
+            'Email Notifications Working',
             'AutoReminder@TorresLawFl.com',
             ['jdriscoll98@ufl.edu'],
             fail_silently=False
