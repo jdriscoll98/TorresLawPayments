@@ -36,6 +36,21 @@
                             <h3>Outstanding Clients</h3>
                             </td>
                         </tr>
+                        <form method="POST" action="">
+                        <tr>
+                            <td colspan="2">
+                                <label>Start Date</label>
+                                <input name='start-date' id='start-date' type='date'>
+                            </td>
+                            <td colspan="2">
+                                <label>End Date</label>
+                                <input name='end-date' id='end-date' type='date'>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-success">Update</button>
+                            </td>
+                        </tr>
+                        </form>
                     </thead>
                     <tbody class="table-body">
                     <tr>
@@ -51,7 +66,7 @@
                         <th>
                             Total Amount Due
                         </th>
-                        <th>
+                        <th style="padding-left: 0">
                             Make a Payment
                         </th>
                     </tr>

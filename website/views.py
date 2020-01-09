@@ -11,6 +11,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic import View
 from django.urls import reverse
+from django.shortcuts import render
 
 
 from django.http import JsonResponse, HttpResponse
@@ -25,24 +26,21 @@ from twilio.rest import Client as TwilioClient
 
 
 # Home Page
-class HomePageView(LoginRequiredMixin, CreateView):
-    template_name = 'website/home_page.html'
-    model =  Client
-    fields = (
-        'name', 'email', 'phone_number', 'total_amount_due', 'payment_amount', 'next_payment_date'
-    )
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        clients = get_clients(-365, 30)
-        next_clients = get_clients(30, 60)
-        next_3_clients = get_clients(60, 90)
+class HomePageView(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        context = {}
+        today = datetimee.today()
+        start_date = datetime(today.year, today.month, 1)
+        end_date = datetime(today.year, today.month, get_end_date(start_date))
+        clients = get_clients(start_date, end_date)
         context['clients'] = clients
-        context['total'] = get_total(clients)
-        context['next_total'] = get_total(next_clients)
-        context['3_total'] = get_total(next_3_clients)
+        context['total'] = get_total(start_date, end_date)
         context['sending'] = Reminder.objects.get(pk=1).in_progress
-        return context
+        context['form'] = NewClientForm()
+        return render(self.request, 'website/home_page.html', context)
+
+    def post(self, *args, **kwargs):
+
     
 class UpdateClient(LoginRequiredMixin, UpdateView):
     template_name = 'website/edit_client.html'
