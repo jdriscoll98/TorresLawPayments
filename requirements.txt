@@ -3,3 +3,5 @@ requests==2.22.0
 django-sendsms==0.4
 twilio==6.33.1
 schedule==0.6.0
+django-phonenumber-field==4.0.0
+phonenumbers==8.11.1

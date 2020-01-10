@@ -17,7 +17,8 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 
 from .models import Client, Reminder
-from .utils import get_clients, get_total
+from .utils import get_clients, get_total, get_end_date
+from .forms import NewClientForm
 
 from sendsms import api
 from twilio.rest import Client as TwilioClient
@@ -29,9 +30,9 @@ from twilio.rest import Client as TwilioClient
 class HomePageView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         context = {}
-        today = datetimee.today()
-        start_date = datetime(today.year, today.month, 1)
-        end_date = datetime(today.year, today.month, get_end_date(start_date))
+        today = datetime.datetime.today()
+        start_date = datetime.datetime(today.year, today.month, 1)
+        end_date = datetime.datetime(today.year, today.month, get_end_date(start_date))
         clients = get_clients(start_date, end_date)
         context['clients'] = clients
         context['total'] = get_total(start_date, end_date)
@@ -39,7 +40,7 @@ class HomePageView(LoginRequiredMixin, View):
         context['form'] = NewClientForm()
         return render(self.request, 'website/home_page.html', context)
 
-    def post(self, *args, **kwargs):
+    # def post(self, *args, **kwargs):
 
     
 class UpdateClient(LoginRequiredMixin, UpdateView):
