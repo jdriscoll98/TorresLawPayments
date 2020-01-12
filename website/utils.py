@@ -1,7 +1,9 @@
 import datetime
+from dateutil.relativedelta import *
+import math
 
 
-from .models import Reminder, Client, Payment
+from .models import Client, Payment
 from django.db.models import Q
 
 
@@ -20,3 +22,13 @@ def get_end_date(start_date):
         return 28
     else:
         return 30
+
+def create_payment_objects(client):
+    months = math.ceil(client.total_amount_due /client.monthly_payment)
+    date = client.first_payment_date
+    for i in range(months):
+        new_payment = Payment.objects.create(client=client, amount= client.monthly_payment,
+                                            date=date)
+        date = date + relativedelta(months=+1)
+        new_payment.save()
+    

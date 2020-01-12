@@ -9,7 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Client(models.Model):
     name = models.CharField(max_length=200)
     email = models.EmailField(max_length=254)
-    phone_number = models.PhoneNumberField()
+    phone_number = PhoneNumberField()
     total_amount_due = models.DecimalField(max_digits=10, decimal_places=2)
     monthly_payment = models.DecimalField(max_digits=10, decimal_places=2)
     first_payment_date = models.DateField(
@@ -31,8 +31,3 @@ class Payment(models.Model):
         return str(self.client) + ' | ' + self.payment_amount + ' | ' + self.payment_date
 
 
-class Reminder(models.Model):
-    in_progress = models.BooleanField(default=False)
-
-    def __str__(self):
-        return "Sending Reminders: {}".format(self.in_progress)

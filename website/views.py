@@ -14,10 +14,10 @@ from django.urls import reverse
 from django.shortcuts import render
 
 
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 
-from .models import Client, Reminder
-from .utils import get_clients, get_total, get_end_date
+from .models import Client
+from .utils import get_clients, get_total, get_end_date, create_payment_objects
 from .forms import NewClientForm
 
 from sendsms import api
@@ -36,11 +36,36 @@ class HomePageView(LoginRequiredMixin, View):
         clients = get_clients(start_date, end_date)
         context['clients'] = clients
         context['total'] = get_total(start_date, end_date)
-        context['sending'] = Reminder.objects.get(pk=1).in_progress
         context['form'] = NewClientForm()
         return render(self.request, 'website/home_page.html', context)
 
-    # def post(self, *args, **kwargs):
+    def post(self, *args, **kwargs):
+        form = NewClientForm(self.request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            client = Client(
+                name = data["name"],
+                email = data["email"],
+                phone_number = data["phone_number"],
+                total_amount_due = data["total_amount_due"],
+                monthly_payment = data["monthly_payment"],
+                first_payment_date = data["first_payment_date"]
+            )
+            client.save()
+            create_payment_objects(client)
+            return HttpResponseRedirect(reverse('website:home_page'))
+        else:
+            context = {}
+            today = datetime.datetime.today()
+            start_date = datetime.datetime(today.year, today.month, 1)
+            end_date = datetime.datetime(
+                today.year, today.month, get_end_date(start_date))
+            clients = get_clients(start_date, end_date)
+            context['clients'] = clients
+            context['total'] = get_total(start_date, end_date)
+            context['form'] = NewClientForm()
+            return render(self, 'website/home_page.html', context)
+
 
     
 class UpdateClient(LoginRequiredMixin, UpdateView):
@@ -132,22 +157,8 @@ def job():
                         from_phone='+12055836393', to=[client.phone_number])
     print('sent reminders')
 
-
-
-    
-
 def start_reminders(request):
-    schedule.every(2).days.at('09:00').do(job).tag('reminders')
-    reminder = Reminder.objects.get(pk=1)
-    reminder.in_progress = True
-    reminder.save()
-    while True:
-        schedule.run_pending()
+    job()
     return JsonResponse({})
 
-def stop_reminders(request):
-    schedule.clear('reminders')
-    reminder = Reminder.objects.get(pk=1)
-    reminder.in_progress = False
-    reminder.save()
-    return JsonResponse({})
+

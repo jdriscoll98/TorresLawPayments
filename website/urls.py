@@ -15,7 +15,6 @@ urlpatterns = [
     url(r'^update-client/month-detail/(?P<pk>\d+)$',
         UpdateClient.as_view(), name='edit_client'),
     url(r'^start-reminders/$', start_reminders, name='start_reminders'),
-    url(r'^stop-reminders/$', stop_reminders, name='stop_reminders'),
     url(r'^month-detail/(?P<low>\d+)/(?P<high>\d+)/$',
         MonthDetail.as_view(), name='month_detail'),
 

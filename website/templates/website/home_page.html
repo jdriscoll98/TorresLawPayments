@@ -176,16 +176,7 @@
                 },
             });
         });
-    $('#stop').on("click", function () {
-            setup_ajax();
-            $.ajax({
-                url: "{% url 'website:stop_reminders' %}",
-                type: "GET",
-                success: function (data) {
-                    location.reload();
-                },
-            });
-        }); 
+
 
 </script>
 
