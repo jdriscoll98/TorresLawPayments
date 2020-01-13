@@ -17,7 +17,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 
 from .models import Client
-from .utils import get_clients, get_total, get_end_date, create_payment_objects
+from .utils import get_payments, get_total, get_end_date, create_payment_objects
 from .forms import NewClientForm
 
 from sendsms import api
@@ -33,16 +33,18 @@ class HomePageView(LoginRequiredMixin, View):
         today = datetime.datetime.today()
         start_date = datetime.datetime(today.year, today.month, 1)
         end_date = datetime.datetime(today.year, today.month, get_end_date(start_date))
-        clients = get_clients(start_date, end_date)
-        context['clients'] = clients
-        context['total'] = get_total(start_date, end_date)
+        payments = get_payments(start_date, end_date)
+        context['payments'] = payments
+        context['total'] = get_total(payments)
         context['form'] = NewClientForm()
+        context['start_date'] = start_date.strftime("%b %d %Y ")
+        context['end_date'] = end_date.strftime("%b %d %Y")
         return render(self.request, 'website/home_page.html', context)
 
     def post(self, *args, **kwargs):
         form = NewClientForm(self.request.POST)
         if form.is_valid():
-            data = form.cleaned_data
+            data = form.cleaned_data    
             client = Client(
                 name = data["name"],
                 email = data["email"],
@@ -58,13 +60,28 @@ class HomePageView(LoginRequiredMixin, View):
             context = {}
             today = datetime.datetime.today()
             start_date = datetime.datetime(today.year, today.month, 1)
-            end_date = datetime.datetime(
-                today.year, today.month, get_end_date(start_date))
-            clients = get_clients(start_date, end_date)
-            context['clients'] = clients
-            context['total'] = get_total(start_date, end_date)
+            end_date = datetime.datetime(today.year, today.month, get_end_date(start_date))
+            payments = get_payments(start_date, end_date)
+            context['payments'] = payments
+            context['total'] = get_total(payments)
             context['form'] = NewClientForm()
-            return render(self, 'website/home_page.html', context)
+            context['start_date'] = start_date.strftime("%b %d %Y ")
+            context['end_date'] = end_date.strftime("%b %d %Y")
+            return render(self.request, 'website/home_page.html', context)
+
+class UpdateDates(LoginRequiredMixin, View):
+    def post(self, *args, **kwargs):
+        data = self.request.POST
+        start_date =  datetime.datetime.strptime(data.get('start-date'), "%Y-%m-%d")
+        end_date = datetime.datetime.strptime(data.get('end-date'), "%Y-%m-%d")
+        payments = get_payments(start_date, end_date)
+        context = {}
+        context['payments'] = payments
+        context['total'] = get_total(payments)
+        context['form'] = NewClientForm()
+        context['start_date'] = start_date.strftime("%b %d %Y ")
+        context['end_date'] = end_date.strftime("%b %d %Y")
+        return render(self.request, 'website/home_page.html', context)
 
 
     

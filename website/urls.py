@@ -11,6 +11,7 @@ urlpatterns = [
 
     # Home Page
     url(r'^$', HomePageView.as_view(), name='home_page'),
+    url(r'^update-dates$', UpdateDates.as_view(), name='update_dates'),
     url(r'^make-payment/$', MakePayment.as_view(), name='make_payment'),
     url(r'^update-client/month-detail/(?P<pk>\d+)$',
         UpdateClient.as_view(), name='edit_client'),

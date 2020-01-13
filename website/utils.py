@@ -1,18 +1,17 @@
 import datetime
-from dateutil.relativedelta import *
 import math
+from dateutil.relativedelta import relativedelta
 
 
 from .models import Client, Payment
 from django.db.models import Q
 
 
-def get_clients(start_date, end_date):
+def get_payments(start_date, end_date):
     payments = Payment.objects.filter(Q(date__gte=start_date) & Q(date__lte=end_date))
-    return [payment.client for payment in payments]
+    return payments
 
-def get_total(start_date, end_date):
-    payments = Payment.objects.filter(Q(date__gte=start_date) & Q(date__lte=end_date))
+def get_total(payments):
     return sum([payment.amount for payment in payments])
 
 def get_end_date(start_date):

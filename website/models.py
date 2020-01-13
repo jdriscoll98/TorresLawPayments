@@ -13,7 +13,7 @@ class Client(models.Model):
     total_amount_due = models.DecimalField(max_digits=10, decimal_places=2)
     monthly_payment = models.DecimalField(max_digits=10, decimal_places=2)
     first_payment_date = models.DateField(
-        auto_now=False, auto_now_add=False, blank=True)
+        auto_now_add=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -28,6 +28,6 @@ class Payment(models.Model):
     date = models.DateField(auto_now=False, auto_now_add=False, blank=True)
 
     def __str__(self):
-        return str(self.client) + ' | ' + self.payment_amount + ' | ' + self.payment_date
+        return str(self.client) + ' | ' + str(self.amount) + ' | ' + str(self.date)
 
 
