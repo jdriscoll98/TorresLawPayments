@@ -1,0 +1,30 @@
+#!/bin/bash
+
+echo
+echo "*************************************************"
+echo "This script sets up a new development enviroment!"
+echo "*************************************************"
+echo
+
+echo "Checking Secrets ..."
+if [ ! -f local-secrets.json ]; then
+  echo "[ERROR] Missing local-secrets.json! Stopping ..."
+  echo
+  exit 1
+fi
+echo "Done"
+
+echo "Creating virtual enviroment (venv) ..."
+virtualenv --python=python3 ~/venv
+if [ ! $? -eq 0 ]; then
+  exit 1
+fi
+echo "Done"
+
+
+echo "Activating virtual enviroment (venv) ..."
+source ~/venv/bin/activate
+if [ "$VIRTUAL_ENV" == "" ]; then
+  exit 1
+fi
+echo "Done"
