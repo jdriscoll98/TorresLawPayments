@@ -14,6 +14,7 @@ class Client(models.Model):
     monthly_payment = models.DecimalField(max_digits=10, decimal_places=2)
     first_payment_date = models.DateField(
         auto_now_add=True, blank=True)
+    admin_fee = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.name

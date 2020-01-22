@@ -51,6 +51,7 @@ class HomePageView(LoginRequiredMixin, View):
                 phone_number = data["phone_number"],
                 total_amount_due = data["total_amount_due"],
                 monthly_payment = data["monthly_payment"],
+                admin_fee = data['admin_fee'],
                 first_payment_date = data["first_payment_date"]
             )
             client.save()
