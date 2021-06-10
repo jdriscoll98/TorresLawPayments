@@ -1,4 +1,4 @@
-Django==1.11.24
+Django==2.2.24
 requests==2.22.0
 django-sendsms==0.4
 twilio==6.33.1
